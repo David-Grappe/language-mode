@@ -1,5 +1,4 @@
-const stories = { 
-      french: [
+const stories = [
       {
         text: "Jean Valjean entra dans la ville de Digne, fatigué et méfiant, après des années au bagne.",
         question: "Que veut dire 'bagne' en anglais ?",
@@ -332,18 +331,4 @@ const stories = {
         question: "Où habitaient le roi et la reine ?",
         answer: "un château"
       }
-    ],
-
-      italian: [
-        { text: "Pinocchio ignorò i consigli e seguì il Gatto e la Volpe.", question: "Chi segue Pinocchio?", answer: "il gatto e la volpe" },
-        { text: "La giovane Lucia camminava tra i vigneti toscani, pensando al futuro.", question: "Dove cammina Lucia?", answer: "tra i vigneti" },
-        { text: "Nel cuore di Milano, il piccolo Andrea sognava di diventare artista.", question: "Cosa sogna di diventare Andrea?", answer: "artista" },
-        { text: "Il vecchio pescatore guardava il mare in silenzio.", question: "Cosa guarda il pescatore?", answer: "il mare" },
-        { text: "Giulia preparava il pranzo con sua nonna nella cucina di famiglia.", question: "Con chi cucina Giulia?", answer: "sua nonna" },
-        { text: "Marco scriveva poesie al tramonto, ispirato dal canto degli uccelli.", question: "Cosa scrive Marco?", answer: "poesie" },
-        { text: "Teresa correva lungo il fiume, ascoltando il suono dell'acqua.", question: "Dove corre Teresa?", answer: "lungo il fiume" },
-        { text: "Nel silenzio della biblioteca, Leonardo sfogliava vecchi manoscritti.", question: "Cosa fa Leonardo?", answer: "sfoglia manoscritti" },
-        { text: "Sotto il cielo stellato, Anna sognava una vita migliore.", question: "Cosa sogna Anna?", answer: "una vita migliore" },
-        { text: "Giovanni guardava le Alpi dalla finestra della sua stanza.", question: "Cosa guarda Giovanni?", answer: "le Alpi" }
-      ]
-};
+    ];
