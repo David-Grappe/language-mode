@@ -189,45 +189,49 @@
     }
 
     function submitAnswer() {
-      const textarea = document.getElementById('user-answer');
-      const userResponse = textarea.value.trim().toLowerCase();
-      textarea.classList.remove('correct', 'incorrect');
-      if (!userResponse) return;
+  const textarea = document.getElementById('user-answer');
+  const userResponse = textarea.value.trim().toLowerCase();
+  textarea.classList.remove('correct', 'incorrect');
+  if (!userResponse) return;
 
-      if (userResponse === currentAnswer) {
-        textarea.classList.add('correct');
-        document.getElementById('response-confirmation').innerText = "Bonne réponse ! 😊";
-        document.getElementById('sound-correct').play();
-        questionCount++;
-        setTimeout(() => {
-          textarea.value = '';
-          textarea.classList.remove('correct');
-          loadStory();
-        }, 1000);
-      } else {
-        textarea.classList.add('incorrect');
-        document.getElementById('response-confirmation').innerText = "Pas tout à fait. Essaie encore !";
-        document.getElementById('sound-wrong').play();
-        lives--;
-        wrongAttempts++;
-        updateLives();
-        if (wrongAttempts >= 3) {
-          document.getElementById('response-confirmation').innerText = `❌ Mauvaise réponse. La bonne réponse était : "${currentAnswer}".`;
-          setTimeout(() => {
-            textarea.value = '';
-            loadStory();
-          }, 2000);
-          return;
-        }
-        if (lives <= 0) {
-          alert("Tu as perdu toutes tes vies. Redémarre la leçon.");
-          questionCount = 0;
-          lives = 3;
-          updateLives();
-        }
-        textarea.value = '';
-      }
+  if (userResponse === currentAnswer) {
+    textarea.classList.add('correct');
+    document.getElementById('response-confirmation').innerText = "Bonne réponse ! 😊";
+    document.getElementById('sound-correct').play();
+    questionCount++;
+    setTimeout(() => {
+      textarea.value = '';
+      textarea.classList.remove('correct');
+      loadStory();
+    }, 1000);
+  } else {
+    textarea.classList.add('incorrect');
+    document.getElementById('sound-wrong').play();
+    wrongAttempts++;
+    lives--;
+    updateLives();
+    
+    textarea.value = ''; // ✅ Clear textbox on every wrong attempt
+
+    if (wrongAttempts >= 3) {
+      document.getElementById('response-confirmation').innerText =
+        `❌ Mauvaise réponse. La bonne réponse était : "${currentAnswer}".`;
+      setTimeout(() => {
+        loadStory();
+      }, 2500); // wait so user sees the correct answer
+    } else {
+      document.getElementById('response-confirmation').innerText = "Pas tout à fait. Essaie encore !";
     }
+
+    if (lives <= 0) {
+      alert("Tu as perdu toutes tes vies. Redémarre la leçon.");
+      questionCount = 0;
+      lives = 3;
+      updateLives();
+    }
+  }
+}
+
 
     function addAccent(letter) {
       const textarea = document.getElementById('user-answer');
