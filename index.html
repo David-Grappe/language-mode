@@ -97,7 +97,7 @@
   </style>
 </head>
 <body>
-  
+
   <audio id="sound-correct" src="correct.mp3" preload="auto"></audio>
   <audio id="sound-wrong" src="wrong.mp3" preload="auto"></audio>
 
@@ -153,6 +153,14 @@
     let currentAnswer = "amour";
     let lives = 3;
     let questionCount = 0;
+    let wrongAttempts = 0;
+
+    document.getElementById("user-answer").addEventListener("keydown", function (event) {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        submitAnswer();
+      }
+    });
 
     function toggleLanguage() {
       const fr = document.getElementById('content-fr');
@@ -171,20 +179,19 @@
         alert("Félicitations ! Vous avez terminé la leçon.");
         return;
       }
-
       const story = stories[Math.floor(Math.random() * stories.length)];
       document.getElementById('story-text').innerText = story.text;
       document.getElementById('question').innerText = "Louis : " + story.question;
       currentAnswer = story.answer.toLowerCase();
       document.getElementById('user-answer').classList.remove('correct', 'incorrect');
       document.getElementById('response-confirmation').innerText = "";
+      wrongAttempts = 0;
     }
 
     function submitAnswer() {
       const textarea = document.getElementById('user-answer');
       const userResponse = textarea.value.trim().toLowerCase();
       textarea.classList.remove('correct', 'incorrect');
-
       if (!userResponse) return;
 
       if (userResponse === currentAnswer) {
@@ -202,7 +209,16 @@
         document.getElementById('response-confirmation').innerText = "Pas tout à fait. Essaie encore !";
         document.getElementById('sound-wrong').play();
         lives--;
+        wrongAttempts++;
         updateLives();
+        if (wrongAttempts >= 3) {
+          document.getElementById('response-confirmation').innerText = `❌ Mauvaise réponse. La bonne réponse était : "${currentAnswer}".`;
+          setTimeout(() => {
+            textarea.value = '';
+            loadStory();
+          }, 2000);
+          return;
+        }
         if (lives <= 0) {
           alert("Tu as perdu toutes tes vies. Redémarre la leçon.");
           questionCount = 0;
