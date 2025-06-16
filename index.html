@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Language Mode</title>
   <script src="stories.js"></script>
+  
   <style>
     body {
       font-family: sans-serif;
@@ -105,13 +106,7 @@
     <h1>Language Mode</h1>
     <div id="streak">🔥 Streak: 0 days</div>
     <div id="lives">❤️❤️❤️</div>
-
-    <div class="lesson-box">
-      <div id="phrase">Cliquez ci-dessous pour commencer votre leçon</div>
-      <div id="language-select">
-        <button onclick="loadLesson('french')">Commencer le Français</button>
-      </div>
-    </div>
+  
 
     <div id="story">
       <h3>📖 Extrait de roman</h3>
@@ -241,6 +236,9 @@
       textarea.focus();
       textarea.selectionStart = textarea.selectionEnd = start + 1;
     }
+    window.onload = () => {
+  loadStory();
+};
   </script>
 </body>
 </html>
