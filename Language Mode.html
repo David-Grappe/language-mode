@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Language Mode</title>
+  <script src="stories.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: #333;
+    }
+    #language-toggle {
+      position: fixed;
+      top: 1rem;
+      left: 2rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #logo {
+      max-height: 50px;
+      margin-bottom: 1rem;
+    }
+    #streak {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    #lives {
+      position: fixed;
+      top: 1rem;
+      right: 2rem;
+      font-size: 1.5rem;
+      color: red;
+    }
+    .lesson-box {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-top: 1rem;
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #language-select {
+      margin-top: 1rem;
+    }
+    #story, #dialogue, #question-box {
+      margin-top: 2rem;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+    .correct {
+      background-color: #d4edda;
+      transition: background-color 0.3s ease;
+    }
+    .incorrect {
+      background-color: #f8d7da;
+      animation: shake 0.3s;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+    }
+    .accent-buttons {
+      margin-top: 1rem;
+    }
+    .accent-buttons button {
+      margin: 0.2rem;
+      font-size: 1rem;
+      padding: 0.3rem 0.5rem;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  
+  <audio id="sound-correct" src="correct.mp3" preload="auto"></audio>
+  <audio id="sound-wrong" src="wrong.mp3" preload="auto"></audio>
+
+  <div id="content-fr">
+    <h1>Language Mode</h1>
+    <div id="streak">🔥 Streak: 0 days</div>
+    <div id="lives">❤️❤️❤️</div>
+
+    <div class="lesson-box">
+      <div id="phrase">Cliquez ci-dessous pour commencer votre leçon</div>
+      <div id="language-select">
+        <button onclick="loadLesson('french')">Commencer le Français</button>
+      </div>
+    </div>
+
+    <div id="story">
+      <h3>📖 Extrait de roman</h3>
+      <p id="story-text">Cliquez ici pour lire un passage.</p>
+      <button onclick="loadStory()">Lire un texte</button>
+    </div>
+
+    <div id="dialogue">
+      <h3>🗣️ Louis demande</h3>
+      <p id="question">Clique sur un extrait pour recevoir une question.</p>
+    </div>
+
+    <div id="question-box">
+      <label for="user-answer">Ta réponse : </label><br>
+      <textarea id="user-answer" rows="3" cols="40" placeholder="Écris ta réponse ici..."></textarea>
+      <div class="accent-buttons">
+        <button onclick="addAccent('à')">à</button>
+        <button onclick="addAccent('â')">â</button>
+        <button onclick="addAccent('ç')">ç</button>
+        <button onclick="addAccent('é')">é</button>
+        <button onclick="addAccent('è')">è</button>
+        <button onclick="addAccent('ê')">ê</button>
+        <button onclick="addAccent('ë')">ë</button>
+        <button onclick="addAccent('î')">î</button>
+        <button onclick="addAccent('ï')">ï</button>
+        <button onclick="addAccent('ô')">ô</button>
+        <button onclick="addAccent('ù')">ù</button>
+        <button onclick="addAccent('û')">û</button>
+        <button onclick="addAccent('ü')">ü</button>
+        <button onclick="addAccent('ÿ')">ÿ</button>
+      </div>
+      <br>
+      <button onclick="submitAnswer()">Soumettre</button>
+      <p id="response-confirmation"></p>
+    </div>
+  </div>
+
+  <script>
+    let currentAnswer = "amour";
+    let lives = 3;
+    let questionCount = 0;
+
+    function toggleLanguage() {
+      const fr = document.getElementById('content-fr');
+      const it = document.getElementById('content-it');
+      fr.classList.toggle('hidden');
+      it?.classList.toggle('hidden');
+    }
+
+    function updateLives() {
+      const heart = '❤️';
+      document.getElementById('lives').innerText = heart.repeat(lives);
+    }
+
+    function loadStory() {
+      if (questionCount >= 10) {
+        alert("Félicitations ! Vous avez terminé la leçon.");
+        return;
+      }
+
+      const story = stories[Math.floor(Math.random() * stories.length)];
+      document.getElementById('story-text').innerText = story.text;
+      document.getElementById('question').innerText = "Louis : " + story.question;
+      currentAnswer = story.answer.toLowerCase();
+      document.getElementById('user-answer').classList.remove('correct', 'incorrect');
+      document.getElementById('response-confirmation').innerText = "";
+    }
+
+    function submitAnswer() {
+      const textarea = document.getElementById('user-answer');
+      const userResponse = textarea.value.trim().toLowerCase();
+      textarea.classList.remove('correct', 'incorrect');
+
+      if (!userResponse) return;
+
+      if (userResponse === currentAnswer) {
+        textarea.classList.add('correct');
+        document.getElementById('response-confirmation').innerText = "Bonne réponse ! 😊";
+        document.getElementById('sound-correct').play();
+        questionCount++;
+        setTimeout(() => {
+          textarea.value = '';
+          textarea.classList.remove('correct');
+          loadStory();
+        }, 1000);
+      } else {
+        textarea.classList.add('incorrect');
+        document.getElementById('response-confirmation').innerText = "Pas tout à fait. Essaie encore !";
+        document.getElementById('sound-wrong').play();
+        lives--;
+        updateLives();
+        if (lives <= 0) {
+          alert("Tu as perdu toutes tes vies. Redémarre la leçon.");
+          questionCount = 0;
+          lives = 3;
+          updateLives();
+        }
+        textarea.value = '';
+      }
+    }
+
+    function addAccent(letter) {
+      const textarea = document.getElementById('user-answer');
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      textarea.value = textarea.value.slice(0, start) + letter + textarea.value.slice(end);
+      textarea.focus();
+      textarea.selectionStart = textarea.selectionEnd = start + 1;
+    }
+  </script>
+</body>
+</html>
