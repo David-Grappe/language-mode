@@ -5,6 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Language Mode</title>
   <script src="stories.js" defer></script>
+  <script defer>
+    window.addEventListener("DOMContentLoaded", () => {
+      let currentAnswer = "";
+      let lives = 3;
+      let questionCount = 0;
+      let wrongAttempts = 0;
+      let currentLanguage = 'french';
+
+      const userAnswer = document.getElementById("user-answer");
+      const storyText = document.getElementById("story-text");
+      const questionText = document.getElementById("question");
+      const responseConfirmation = document.getElementById("response-confirmation");
+
+      function updateLives() {
+        const heart = '❤️';
+        document.getElementById('lives').innerText = heart.repeat(lives);
+      }
+
+      function loadStory() {
+        if (questionCount >= 10) {
+          alert(currentLanguage === 'french' ? "Félicitations ! Vous avez terminé la leçon." : "Congratulazioni! Hai finito la lezione.");
+          return;
+        }
+        const data = window.stories[currentLanguage];
+        const story = data[Math.floor(Math.random() * data.length)];
+        storyText.innerText = story.text;
+        questionText.innerText = (currentLanguage === 'french' ? "Louis : " : "Luigi: ") + story.question;
+        currentAnswer = story.answer.toLowerCase();
+        userAnswer.classList.remove('correct', 'incorrect');
+        responseConfirmation.innerText = "";
+        wrongAttempts = 0;
+      }
+
+      document.getElementById("read-button").addEventListener("click", loadStory);
+    });
+  </script>
   <style>
     * {
       box-sizing: border-box;
@@ -39,30 +75,34 @@
       font-size: 1.5rem;
       color: red;
     }
-    .lesson-box {
+    .lesson-box,
+    #story,
+    #dialogue,
+    #question-box {
       background: white;
       padding: 1rem;
-      border-radius: 1px;
+      border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       margin-top: 1rem;
       text-align: center;
-      max-width: 400px;
+      max-width: 600px;
       width: 100%;
+    }
+    @media (max-width: 600px) {
+      .lesson-box,
+      #story,
+      #dialogue,
+      #question-box {
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+        width: calc(100% - 0.5rem);
+      }
     }
     button {
       margin-top: 1rem;
       padding: 0.5rem 1rem;
       font-size: 1rem;
       cursor: pointer;
-    }
-    #story, #dialogue, #question-box {
-      margin-top: 2rem;
-      background: #fff;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      max-width: 600px;
-      width: 100%;
     }
     .correct {
       background-color: #d4edda;
@@ -95,186 +135,20 @@
   </style>
 </head>
 <body>
-  <audio id="sound-correct" src="correct.mp3" preload="auto"></audio>
-  <audio id="sound-wrong" src="wrong.mp3" preload="auto"></audio>
-
-  <h1 id="main-title">Language Mode</h1>
-  <div id="language-toggle">
-    <button onclick="setLanguage('french')">Français</button>
-    <button onclick="setLanguage('italian')">Italiano</button>
-  </div>
-  <div id="streak">🔥 Streak: 0 days</div>
   <div id="lives">❤️❤️❤️</div>
-
-  <div class="lesson-box">
-    <div id="phrase">Cliquez ci-dessous pour commencer votre leçon</div>
-    <div id="language-select">
-      <button onclick="loadLesson()" id="start-button">Commencer la leçon</button>
-    </div>
-  </div>
-
   <div id="story">
-    <h3 id="story-title">📖 Extrait de roman</h3>
-    <p id="story-text">Cliquez ici pour lire un passage.</p>
+    <h3>📖 Texte</h3>
+    <p id="story-text">Clique ici pour lire un passage.</p>
     <button id="read-button">Lire un texte</button>
   </div>
-
   <div id="dialogue">
-    <h3 id="dialogue-title">🗣️ Louis demande</h3>
+    <h3>🗣️ Question</h3>
     <p id="question">Clique sur un extrait pour recevoir une question.</p>
   </div>
-
   <div id="question-box">
-    <label for="user-answer" id="answer-label">Ta réponse : </label><br>
+    <label for="user-answer">Ta réponse :</label><br>
     <textarea id="user-answer" rows="3" cols="40" placeholder="Écris ta réponse ici..."></textarea>
-    <div class="accent-buttons">
-      <button onclick="addAccent('à')">à</button>
-      <button onclick="addAccent('â')">â</button>
-      <button onclick="addAccent('ç')">ç</button>
-      <button onclick="addAccent('é')">é</button>
-      <button onclick="addAccent('è')">è</button>
-      <button onclick="addAccent('ê')">ê</button>
-      <button onclick="addAccent('ë')">ë</button>
-      <button onclick="addAccent('î')">î</button>
-      <button onclick="addAccent('ï')">ï</button>
-      <button onclick="addAccent('ô')">ô</button>
-      <button onclick="addAccent('ù')">ù</button>
-      <button onclick="addAccent('û')">û</button>
-      <button onclick="addAccent('ü')">ü</button>
-      <button onclick="addAccent('ÿ')">ÿ</button>
-    </div>
-    <br>
-    <button onclick="submitAnswer()">Soumettre</button>
     <p id="response-confirmation"></p>
   </div>
-
-  <script>
-    let currentAnswer = "";
-    let lives = 3;
-    let questionCount = 0;
-    let wrongAttempts = 0;
-    let currentLanguage = 'french';
-
-    document.getElementById("user-answer").addEventListener("keydown", function (event) {
-      if (event.key === "Enter" && !event.shiftKey) {
-        event.preventDefault();
-        submitAnswer();
-      }
-    });
-
-    document.getElementById("read-button").addEventListener("click", function () {
-      loadStory();
-    });
-
-    function setLanguage(lang) {
-      currentLanguage = lang;
-      const phrases = {
-        french: {
-          phrase: "Cliquez ci-dessous pour commencer votre leçon",
-          start: "Commencer la leçon",
-          read: "Lire un texte",
-          questionLabel: "Louis : ",
-          storyTitle: "📖 Extrait de roman",
-          dialogueTitle: "🗣️ Louis demande",
-          answerLabel: "Ta réponse : "
-        },
-        italian: {
-          phrase: "Fai clic qui sotto per iniziare la tua lezione",
-          start: "Inizia la lezione",
-          read: "Leggi un testo",
-          questionLabel: "Luigi: ",
-          storyTitle: "📖 Brano di romanzo",
-          dialogueTitle: "🗣️ Luigi chiede",
-          answerLabel: "La tua risposta: "
-        }
-      };
-
-      const selected = phrases[lang];
-      document.getElementById('phrase').innerText = selected.phrase;
-      document.getElementById('start-button').innerText = selected.start;
-      document.getElementById('read-button').innerText = selected.read;
-      document.getElementById('story-title').innerText = selected.storyTitle;
-      document.getElementById('dialogue-title').innerText = selected.dialogueTitle;
-      document.getElementById('answer-label').innerText = selected.answerLabel;
-      loadLesson();
-    }
-
-    function updateLives() {
-      const heart = '❤️';
-      document.getElementById('lives').innerText = heart.repeat(lives);
-    }
-
-    function loadLesson() {
-      questionCount = 0;
-      lives = 3;
-      updateLives();
-      loadStory();
-    }
-
-    function loadStory() {
-      if (questionCount >= 10) {
-        alert(currentLanguage === 'french' ? "Félicitations ! Vous avez terminé la leçon." : "Congratulazioni! Hai finito la lezione.");
-        return;
-      }
-      const data = window.stories[currentLanguage];
-      const story = data[Math.floor(Math.random() * data.length)];
-      document.getElementById('story-text').innerText = story.text;
-      document.getElementById('question').innerText = (currentLanguage === 'french' ? "Louis : " : "Luigi: ") + story.question;
-      currentAnswer = story.answer.toLowerCase();
-      document.getElementById('user-answer').classList.remove('correct', 'incorrect');
-      document.getElementById('response-confirmation').innerText = "";
-      wrongAttempts = 0;
-    }
-
-    function submitAnswer() {
-      const textarea = document.getElementById('user-answer');
-      const userResponse = textarea.value.trim().toLowerCase();
-      textarea.classList.remove('correct', 'incorrect');
-      if (!userResponse) return;
-
-      if (userResponse === currentAnswer) {
-        textarea.classList.add('correct');
-        document.getElementById('response-confirmation').innerText = currentLanguage === 'french' ? "Bonne réponse ! 😊" : "Risposta corretta! 😊";
-        document.getElementById('sound-correct').play();
-        questionCount++;
-        setTimeout(() => {
-          textarea.value = '';
-          textarea.classList.remove('correct');
-          loadStory();
-        }, 1000);
-      } else {
-        textarea.classList.add('incorrect');
-        document.getElementById('response-confirmation').innerText = currentLanguage === 'french' ? "Pas tout à fait. Essaie encore !" : "Non proprio. Riprova!";
-        document.getElementById('sound-wrong').play();
-        lives--;
-        wrongAttempts++;
-        updateLives();
-        if (wrongAttempts >= 3) {
-          document.getElementById('response-confirmation').innerText = `❌ ${(currentLanguage === 'french' ? "Mauvaise réponse. La bonne réponse était" : "Risposta sbagliata. La risposta corretta era")}: "${currentAnswer}".`;
-          setTimeout(() => {
-            textarea.value = '';
-            loadStory();
-          }, 2000);
-          return;
-        }
-        if (lives <= 0) {
-          alert(currentLanguage === 'french' ? "Tu as perdu toutes tes vies. Redémarre la leçon." : "Hai perso tutte le vite. Ricomincia la lezione.");
-          questionCount = 0;
-          lives = 3;
-          updateLives();
-        }
-        textarea.value = '';
-      }
-    }
-
-    function addAccent(letter) {
-      const textarea = document.getElementById('user-answer');
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      textarea.value = textarea.value.slice(0, start) + letter + textarea.value.slice(end);
-      textarea.focus();
-      textarea.selectionStart = textarea.selectionEnd = start + 1;
-    }
-  </script>
 </body>
 </html>
