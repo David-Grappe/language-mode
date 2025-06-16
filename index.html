@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Language Mode</title>
-  <script src="stories.js" defer></script>
-  <script defer>
-    window.addEventListener("DOMContentLoaded", () => {
+  <script src="stories.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
       let currentAnswer = "";
       let lives = 3;
       let questionCount = 0;
@@ -17,6 +17,7 @@
       const storyText = document.getElementById("story-text");
       const questionText = document.getElementById("question");
       const responseConfirmation = document.getElementById("response-confirmation");
+      const readButton = document.getElementById("read-button");
 
       function updateLives() {
         const heart = '❤️';
@@ -24,10 +25,16 @@
       }
 
       function loadStory() {
+        if (!window.stories || !window.stories[currentLanguage] || window.stories[currentLanguage].length === 0) {
+          alert("No stories available for " + currentLanguage);
+          return;
+        }
+
         if (questionCount >= 10) {
           alert(currentLanguage === 'french' ? "Félicitations ! Vous avez terminé la leçon." : "Congratulazioni! Hai finito la lezione.");
           return;
         }
+
         const data = window.stories[currentLanguage];
         const story = data[Math.floor(Math.random() * data.length)];
         storyText.innerText = story.text;
@@ -38,7 +45,7 @@
         wrongAttempts = 0;
       }
 
-      document.getElementById("read-button").addEventListener("click", loadStory);
+      readButton.addEventListener("click", loadStory);
     });
   </script>
   <style>
