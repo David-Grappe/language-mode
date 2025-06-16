@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Language Mode</title>
-  <script src="stories.js"></script>
+  <script src="stories.js" defer></script>
   <style>
     * {
       box-sizing: border-box;
@@ -98,7 +98,7 @@
   <audio id="sound-correct" src="correct.mp3" preload="auto"></audio>
   <audio id="sound-wrong" src="wrong.mp3" preload="auto"></audio>
 
-  <h1>Language Mode</h1>
+  <h1 id="main-title">Language Mode</h1>
   <div id="language-toggle">
     <button onclick="setLanguage('french')">Français</button>
     <button onclick="setLanguage('italian')">Italiano</button>
@@ -109,23 +109,23 @@
   <div class="lesson-box">
     <div id="phrase">Cliquez ci-dessous pour commencer votre leçon</div>
     <div id="language-select">
-      <button onclick="loadLesson()">Commencer la leçon</button>
+      <button onclick="loadLesson()" id="start-button">Commencer la leçon</button>
     </div>
   </div>
 
   <div id="story">
-    <h3>📖 Extrait de roman</h3>
+    <h3 id="story-title">📖 Extrait de roman</h3>
     <p id="story-text">Cliquez ici pour lire un passage.</p>
-    <button onclick="loadStory()">Lire un texte</button>
+    <button id="read-button">Lire un texte</button>
   </div>
 
   <div id="dialogue">
-    <h3>🗣️ Louis demande</h3>
+    <h3 id="dialogue-title">🗣️ Louis demande</h3>
     <p id="question">Clique sur un extrait pour recevoir une question.</p>
   </div>
 
   <div id="question-box">
-    <label for="user-answer">Ta réponse : </label><br>
+    <label for="user-answer" id="answer-label">Ta réponse : </label><br>
     <textarea id="user-answer" rows="3" cols="40" placeholder="Écris ta réponse ici..."></textarea>
     <div class="accent-buttons">
       <button onclick="addAccent('à')">à</button>
@@ -162,9 +162,40 @@
       }
     });
 
+    document.getElementById("read-button").addEventListener("click", function () {
+      loadStory();
+    });
+
     function setLanguage(lang) {
       currentLanguage = lang;
-      document.getElementById('phrase').innerText = lang === 'french' ? 'Cliquez ci-dessous pour commencer votre leçon' : 'Fai clic qui sotto per iniziare la tua lezione';
+      const phrases = {
+        french: {
+          phrase: "Cliquez ci-dessous pour commencer votre leçon",
+          start: "Commencer la leçon",
+          read: "Lire un texte",
+          questionLabel: "Louis : ",
+          storyTitle: "📖 Extrait de roman",
+          dialogueTitle: "🗣️ Louis demande",
+          answerLabel: "Ta réponse : "
+        },
+        italian: {
+          phrase: "Fai clic qui sotto per iniziare la tua lezione",
+          start: "Inizia la lezione",
+          read: "Leggi un testo",
+          questionLabel: "Luigi: ",
+          storyTitle: "📖 Brano di romanzo",
+          dialogueTitle: "🗣️ Luigi chiede",
+          answerLabel: "La tua risposta: "
+        }
+      };
+
+      const selected = phrases[lang];
+      document.getElementById('phrase').innerText = selected.phrase;
+      document.getElementById('start-button').innerText = selected.start;
+      document.getElementById('read-button').innerText = selected.read;
+      document.getElementById('story-title').innerText = selected.storyTitle;
+      document.getElementById('dialogue-title').innerText = selected.dialogueTitle;
+      document.getElementById('answer-label').innerText = selected.answerLabel;
       loadLesson();
     }
 
