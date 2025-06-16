@@ -213,4 +213,37 @@
         }, 1000);
       } else {
         textarea.classList.add('incorrect');
-        document.getElementById('response-confirmation').innerText = currentLa
+        document.getElementById('response-confirmation').innerText = currentLanguage === 'french' ? "Pas tout à fait. Essaie encore !" : "Non proprio. Riprova!";
+        document.getElementById('sound-wrong').play();
+        lives--;
+        wrongAttempts++;
+        updateLives();
+        if (wrongAttempts >= 3) {
+          document.getElementById('response-confirmation').innerText = `❌ ${(currentLanguage === 'french' ? "Mauvaise réponse. La bonne réponse était" : "Risposta sbagliata. La risposta corretta era")}: "${currentAnswer}".`;
+          setTimeout(() => {
+            textarea.value = '';
+            loadStory();
+          }, 2000);
+          return;
+        }
+        if (lives <= 0) {
+          alert(currentLanguage === 'french' ? "Tu as perdu toutes tes vies. Redémarre la leçon." : "Hai perso tutte le vite. Ricomincia la lezione.");
+          questionCount = 0;
+          lives = 3;
+          updateLives();
+        }
+        textarea.value = '';
+      }
+    }
+
+    function addAccent(letter) {
+      const textarea = document.getElementById('user-answer');
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      textarea.value = textarea.value.slice(0, start) + letter + textarea.value.slice(end);
+      textarea.focus();
+      textarea.selectionStart = textarea.selectionEnd = start + 1;
+    }
+  </script>
+</body>
+</html>
