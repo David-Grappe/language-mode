@@ -1,4 +1,4 @@
-const storiesIt = [
+const stories_it = [
         { text: "Pinocchio ignorò i consigli e seguì il Gatto e la Volpe.", question: "Chi segue Pinocchio?", answer: "il gatto e la volpe" },
         { text: "La giovane Lucia camminava tra i vigneti toscani, pensando al futuro.", question: "Dove cammina Lucia?", answer: "tra i vigneti" },
         { text: "Nel cuore di Milano, il piccolo Andrea sognava di diventare artista.", question: "Cosa sogna di diventare Andrea?", answer: "artista" },
