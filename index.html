@@ -312,23 +312,23 @@
 });
 
     function speakText(type) {
-  const utterance = new SpeechSynthesisUtterance();
-  let text = '';
-
-  if (type === 'story') {
-    text = document.getElementById('story-text').innerText;
-  } else if (type === 'question') {
-    text = document.getElementById('question').innerText;
-  }
-
-  // Language mapping (ISO codes)
-  const langMap = {
-    fr: 'fr-FR',
-    it: 'it-IT',
-    ru: 'ru-RU',
-    ja: 'ja-JP',
-    ar: 'ar-SA'
-  };
+      const utterance = new SpeechSynthesisUtterance();
+      let text = '';
+    
+      if (type === 'story') {
+        text = document.getElementById('story-text').innerText;
+      } else if (type === 'question') {
+        text = document.getElementById('question').innerText;
+      }
+    
+      // Language mapping (ISO codes)
+      const langMap = {
+        fr: 'fr-FR',
+        it: 'it-IT',
+        ru: 'ru-RU',
+        ja: 'ja-JP',
+        ar: 'ar-SA'
+      };
 
   utterance.lang = langMap[currentLanguage] || 'en-US';
   utterance.text = text;
