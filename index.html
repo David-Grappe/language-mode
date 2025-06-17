@@ -103,7 +103,7 @@
 
   <div id="question-box">
     <p id="correct-answer-display" style="font-weight: bold; color: green;"></p>
-    <label for="user-answer">Your answer:</label><br>
+    <label for="user-answer" id="your-answer-label">Your answer:</label><br>
     <textarea id="user-answer" rows="3" cols="40"></textarea>
     <div class="accent-buttons"></div>
     <br>
@@ -119,12 +119,12 @@
     let wrongAttempts = 0;
 
     const translations = {
-      fr: { storyButton: "Changer le texte", louis: "Louis demande", answerWas: "✅ La bonne réponse était :" },
-      it: { storyButton: "Cambia il testo", louis: "Luigi chiede", answerWas: "✅ La risposta corretta era:" },
-      ru: { storyButton: "Сменить текст", louis: "Вопрос", answerWas: "✅ Правильный ответ был:" },
-      ja: { storyButton: "テキストを変更", louis: "ルイの質問", answerWas: "✅ 正解は：" },
-      ar: { storyButton: "غيّر النص", louis: "لويس يسأل", answerWas: "✅ الإجابة الصحيحة كانت:" },
-      es: { storyButton: "Cambiar el texto", louis: "Luis pregunta", answerWas: "✅ La respuesta correcta era:" }
+      fr: { storyButton: "Changer le texte", storyTitle: "Extrait de roman", yourAnswer: "Ta réponse :" , "Changer le texte", louis: "Louis demande", answerWas: "✅ La bonne réponse était :" },
+      it: { storyButton: "Cambia il testo", storyTitle: "Estratto di romanzo", yourAnswer: "La tua risposta:" , "Cambia il testo", louis: "Luigi chiede", answerWas: "✅ La risposta corretta era:" },
+      ru: { storyButton: "Сменить текст", storyTitle: "Отрывок из романа", yourAnswer: "Твой ответ:" , "Сменить текст", louis: "Вопрос", answerWas: "✅ Правильный ответ был:" },
+      ja: { storyButton: "テキストを変更", storyTitle: "小説の抜粋", yourAnswer: "あなたの答え：" , "テキストを変更", louis: "ルイの質問", answerWas: "✅ 正解は：" },
+      ar: { storyButton: "غيّر النص", storyTitle: "مقتطف من رواية", yourAnswer: "إجابتك:" , "غيّر النص", louis: "لويس يسأل", answerWas: "✅ الإجابة الصحيحة كانت:" },
+      es: { storyButton: "Cambiar el texto", storyTitle: "Extracto de novela", yourAnswer: "Tu respuesta:" , "Cambiar el texto", louis: "Luis pregunta", answerWas: "✅ La respuesta correcta era:" }
     };
 
     const accents = {
@@ -150,6 +150,8 @@
       const t = translations[lang];
       document.querySelector("#switch-text-button").innerText = t.storyButton;
       document.querySelector("#dialogue h3").innerText = t.louis;
+      document.getElementById("your-answer-label").innerText = t.yourAnswer;
+      document.getElementById("story-title").innerText = t.storyTitle;
       loadStory();
     }
 
