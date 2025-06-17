@@ -86,13 +86,17 @@
 
   <div id="story">
     <h3>📖 Story</h3>
-    <p id="story-text">Click to load a story.</p>
+    <p id="story-text" style="display: inline;">Click to load a story.</p>
+    <button onclick="speakText('story')" style="margin-left: 0.5em;">🔊</button>
+
     <button onclick="loadStory()">Load Story</button>
   </div>
 
   <div id="dialogue">
     <h3>🗣️ Question</h3>
-    <p id="question">Click a story to get a question.</p>
+    <p id="question" style="display: inline;">Click a story to get a question.</p>
+    <button onclick="speakText('question')" style="margin-left: 0.5em;">🔊</button>
+
   </div>
 
   <div id="question-box">
@@ -305,6 +309,31 @@
         submitAnswer();
   }
 });
+
+    function speakText(type) {
+  const utterance = new SpeechSynthesisUtterance();
+  let text = '';
+
+  if (type === 'story') {
+    text = document.getElementById('story-text').innerText;
+  } else if (type === 'question') {
+    text = document.getElementById('question').innerText;
+  }
+
+  // Language mapping (ISO codes)
+  const langMap = {
+    fr: 'fr-FR',
+    it: 'it-IT',
+    ru: 'ru-RU',
+    ja: 'ja-JP',
+    ar: 'ar-SA'
+  };
+
+  utterance.lang = langMap[currentLanguage] || 'en-US';
+  utterance.text = text;
+  speechSynthesis.speak(utterance);
+}
+
 
   </script>
 </body>
