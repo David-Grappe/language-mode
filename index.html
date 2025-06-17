@@ -85,11 +85,12 @@
   <div id="lives">❤️❤️❤️</div>
 
   <div id="story">
-    <h3>📖 Story</h3>
-    <p id="story-text" style="display: inline;">Click to load a story.</p>
-    <button onclick="speakText('story')" style="margin-left: 0.5em;">🔊</button>
-    
-  </div>
+    <h3>📖 <span id="story-title">Extrait de roman</span></h3>
+    <p id="story-text" style="display: inline;">Cliquez ici pour lire un passage.</p>
+    <button onclick="speakText('story')" style="margin-left: 0.5em; font-size: 1.2em;">🔊</button>
+    <br>
+    <button onclick="loadStory()">Lire un texte</button>
+</div>
 
   <div id="dialogue">
     <h3>🗣️ Question</h3>
