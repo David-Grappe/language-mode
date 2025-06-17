@@ -120,8 +120,11 @@
     </div>
 
     <div id="question-box">
+      <p id="correct-answer-display" style="font-weight: bold; color: green;"></p>
       <label for="user-answer">Ta réponse : </label><br>
       <textarea id="user-answer" rows="3" cols="40" placeholder="Écris ta réponse ici..."></textarea>
+
+      
       <div class="accent-buttons">
         <button onclick="addAccent('à')">à</button>
         <button onclick="addAccent('â')">â</button>
@@ -209,8 +212,12 @@
     textarea.value = ''; // ✅ Clear textbox on every wrong attempt
 
     if (wrongAttempts >= 3) {
-      document.getElementById('response-confirmation').innerText =
-        `❌ Mauvaise réponse. La bonne réponse était : "${currentAnswer}".`;
+      document.getElementById('correct-answer-display').innerText =
+        `✅ La bonne réponse était : "${currentAnswer}"`;
+      document.getElementById('response-confirmation').innerText = "";
+      document.getElementById('correct-answer-display').innerText = "";
+
+
       setTimeout(() => {
         loadStory();
       }, 2500); // wait so user sees the correct answer
