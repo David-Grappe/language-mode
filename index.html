@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Language Mode</title>
 
-  <!-- Load story sources -->
-  <script src="stories.js"></script>     <!-- French stories -->
-  <script src="stories_it.js"></script> <!-- Italian stories -->
+  <!-- Load stories for each language -->
+  <script src="stories.js"></script>
+  <script src="stories_it.js"></script>
+  <script src="stories_ru.js"></script>
+  <script src="stories_ja.js"></script>
+  <script src="stories_ar.js"></script>
 
   <style>
     body {
@@ -42,9 +45,16 @@
       max-width: 600px;
       width: 100%;
     }
+    .accent-buttons {
+      margin-top: 1rem;
+    }
+    .accent-buttons button {
+      margin: 0.2rem;
+      font-size: 1rem;
+      padding: 0.3rem 0.5rem;
+    }
     .correct {
       background-color: #d4edda;
-      transition: background-color 0.3s ease;
     }
     .incorrect {
       background-color: #f8d7da;
@@ -56,50 +66,42 @@
       50% { transform: translateX(5px); }
       75% { transform: translateX(-5px); }
     }
-    .accent-buttons {
-      margin-top: 1rem;
-    }
-    .accent-buttons button {
-      margin: 0.2rem;
-      font-size: 1rem;
-      padding: 0.3rem 0.5rem;
-    }
   </style>
 </head>
 <body>
   <audio id="sound-correct" src="correct.mp3" preload="auto"></audio>
   <audio id="sound-wrong" src="wrong.mp3" preload="auto"></audio>
 
-  <!-- Language switch buttons -->
   <div style="margin-bottom: 1rem;">
     <button onclick="switchLanguage('fr')">Français</button>
     <button onclick="switchLanguage('it')">Italiano</button>
+    <button onclick="switchLanguage('ru')">Русский</button>
+    <button onclick="switchLanguage('ja')">日本語</button>
+    <button onclick="switchLanguage('ar')">العربية</button>
   </div>
 
   <h1>Language Mode</h1>
-  <div id="streak">🔥 Streak: 0 jours</div>
+  <div id="streak">🔥 Streak: 0</div>
   <div id="lives">❤️❤️❤️</div>
 
   <div id="story">
-    <h3>📖 Extrait de roman</h3>
-    <p id="story-text">Cliquez ici pour lire un passage.</p>
-    <button onclick="loadStory()">Lire un texte</button>
+    <h3>📖 Story</h3>
+    <p id="story-text">Click to load a story.</p>
+    <button onclick="loadStory()">Load Story</button>
   </div>
 
   <div id="dialogue">
-    <h3>🗣️ Louis demande</h3>
-    <p id="question">Clique sur un extrait pour recevoir une question.</p>
+    <h3>🗣️ Question</h3>
+    <p id="question">Click a story to get a question.</p>
   </div>
 
   <div id="question-box">
     <p id="correct-answer-display" style="font-weight: bold; color: green;"></p>
-    <label for="user-answer">Ta réponse :</label><br>
-    <textarea id="user-answer" rows="3" cols="40" placeholder="Écris ta réponse ici..."></textarea>
-
+    <label for="user-answer">Your answer:</label><br>
+    <textarea id="user-answer" rows="3" cols="40"></textarea>
     <div class="accent-buttons"></div>
-
     <br>
-    <button onclick="submitAnswer()">Soumettre</button>
+    <button onclick="submitAnswer()">Submit</button>
     <p id="response-confirmation"></p>
   </div>
 
@@ -112,42 +114,76 @@
 
     const translations = {
       fr: {
-        title: "Language Mode",
-        streak: "🔥 Streak: 0 jours",
-        storyTitle: "📖 Extrait de roman",
-        storyPlaceholder: "Cliquez ici pour lire un passage.",
-        storyButton: "Lire un texte",
-        louis: "Louis demande",
+        title: "Mode Langue", streak: "🔥 Streak: 0 jours",
+        storyTitle: "📖 Extrait de roman", storyPlaceholder: "Cliquez ici pour lire un passage.",
+        storyButton: "Lire un texte", louis: "Louis demande",
         louisPlaceholder: "Clique sur un extrait pour recevoir une question.",
-        yourAnswer: "Ta réponse :",
-        submit: "Soumettre",
-        tryAgain: "Pas tout à fait. Essaie encore !",
-        correctResponse: "Bonne réponse ! 😊",
+        yourAnswer: "Ta réponse :", submit: "Soumettre",
+        tryAgain: "Pas tout à fait. Essaie encore !", correctResponse: "Bonne réponse ! 😊",
         finalMessage: "Félicitations ! Vous avez terminé la leçon.",
         lostMessage: "Tu as perdu toutes tes vies. Redémarre la leçon.",
         answerWas: "✅ La bonne réponse était :"
       },
       it: {
-        title: "Modalità Lingua",
-        streak: "🔥 Serie: 0 giorni",
-        storyTitle: "📖 Estratto di romanzo",
-        storyPlaceholder: "Clicca qui per leggere un brano.",
-        storyButton: "Leggi un testo",
-        louis: "Luigi chiede",
+        title: "Modalità Lingua", streak: "🔥 Serie: 0 giorni",
+        storyTitle: "📖 Estratto di romanzo", storyPlaceholder: "Clicca qui per leggere un brano.",
+        storyButton: "Leggi un testo", louis: "Luigi chiede",
         louisPlaceholder: "Clicca su un brano per ricevere una domanda.",
-        yourAnswer: "La tua risposta:",
-        submit: "Invia",
-        tryAgain: "Non proprio. Riprova!",
-        correctResponse: "Risposta corretta! 😊",
+        yourAnswer: "La tua risposta:", submit: "Invia",
+        tryAgain: "Non proprio. Riprova!", correctResponse: "Risposta corretta! 😊",
         finalMessage: "Complimenti! Hai completato la lezione.",
         lostMessage: "Hai perso tutte le vite. Riavvia la lezione.",
         answerWas: "✅ La risposta corretta era:"
+      },
+      ru: {
+        title: "Режим языка", streak: "🔥 Серия: 0 дней",
+        storyTitle: "📖 Отрывок из романа", storyPlaceholder: "Нажмите здесь, чтобы прочитать отрывок.",
+        storyButton: "Читать текст", louis: "Вопрос",
+        louisPlaceholder: "Нажмите на отрывок, чтобы получить вопрос.",
+        yourAnswer: "Твой ответ:", submit: "Отправить",
+        tryAgain: "Неправильно. Попробуй еще!", correctResponse: "Правильный ответ! 😊",
+        finalMessage: "Поздравляем! Вы завершили урок.",
+        lostMessage: "Вы потеряли все жизни. Начните заново.",
+        answerWas: "✅ Правильный ответ был:"
+      },
+      ja: {
+        title: "言語モード", streak: "🔥 連続: 0日",
+        storyTitle: "📖 小説の抜粋", storyPlaceholder: "クリックして文章を読む",
+        storyButton: "テキストを読む", louis: "ルイの質問",
+        louisPlaceholder: "抜粋をクリックして質問を受け取る",
+        yourAnswer: "あなたの答え：", submit: "送信",
+        tryAgain: "違います。もう一度！", correctResponse: "正解です！ 😊",
+        finalMessage: "おめでとうございます！ レッスンが終了しました。",
+        lostMessage: "全てのライフを失いました。やり直してください。",
+        answerWas: "✅ 正解は："
+      },
+      ar: {
+        title: "وضع اللغة", streak: "🔥 السلسلة: 0 أيام",
+        storyTitle: "📖 مقتطف من رواية", storyPlaceholder: "اضغط هنا لقراءة المقطع.",
+        storyButton: "اقرأ النص", louis: "لويس يسأل",
+        louisPlaceholder: "اضغط على المقطع للحصول على سؤال.",
+        yourAnswer: "إجابتك:", submit: "إرسال",
+        tryAgain: "ليست صحيحة، حاول مرة أخرى!", correctResponse: "إجابة صحيحة! 😊",
+        finalMessage: "مبروك! لقد أنهيت الدرس.",
+        lostMessage: "لقد فقدت كل حياتك. أعد بدء الدرس.",
+        answerWas: "✅ الإجابة الصحيحة كانت:"
       }
     };
 
     const accents = {
       fr: ['à','â','ç','é','è','ê','ë','î','ï','ô','ù','û','ü','ÿ'],
-      it: ['à','è','é','ì','í','î','ò','ó','ù','ú']
+      it: ['à','è','é','ì','í','î','ò','ó','ù','ú'],
+      ru: ['а','б','в','г','д','е','ё','ж','з','и'],
+      ja: ['あ','い','う','え','お','か','き','く','け','こ'],
+      ar: ['ا','ب','ت','ث','ج','ح','خ','د','ذ','ر']
+    };
+
+    const storySources = {
+      fr: () => stories,
+      it: () => stories_it,
+      ru: () => stories_ru,
+      ja: () => stories_ja,
+      ar: () => stories_ar
     };
 
     function switchLanguage(lang) {
@@ -169,7 +205,7 @@
       lives = 3;
       updateLives();
       updateAccentButtons();
-      loadStory(); // 👈 Load correct story immediately
+      loadStory();
     }
 
     function updateAccentButtons() {
@@ -188,14 +224,13 @@
     }
 
     function loadStory() {
-      const storyData = currentLanguage === 'fr' ? stories : stories_it;
-
-      if (questionCount >= 10) {
-        alert(translations[currentLanguage].finalMessage);
+      const data = storySources[currentLanguage]();
+      if (!data || data.length === 0) {
+        console.warn("No stories available for language:", currentLanguage);
         return;
       }
 
-      const story = storyData[Math.floor(Math.random() * storyData.length)];
+      const story = data[Math.floor(Math.random() * data.length)];
       document.getElementById('story-text').innerText = story.text;
       document.getElementById('question').innerText = translations[currentLanguage].louis + " : " + story.question;
       currentAnswer = story.answer.toLowerCase();
