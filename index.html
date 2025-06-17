@@ -5,11 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Language Mode</title>
 
+  <!-- Language story files -->
   <script src="stories.js"></script>
   <script src="stories_it.js"></script>
   <script src="stories_ru.js"></script>
   <script src="stories_ja.js"></script>
   <script src="stories_ar.js"></script>
+  <script src="stories_es.js"></script>
 
   <style>
     body {
@@ -77,6 +79,7 @@
     <button onclick="switchLanguage('ru')">Русский</button>
     <button onclick="switchLanguage('ja')">日本語</button>
     <button onclick="switchLanguage('ar')">العربية</button>
+    <button onclick="switchLanguage('es')">Español</button>
   </div>
 
   <h1>Language Mode</h1>
@@ -86,7 +89,7 @@
   <div id="story">
     <h3>📖 <span id="story-title">Extrait de roman</span></h3>
     <p id="story-text" style="display: inline;">Cliquez ici pour lire un passage.</p>
-    <button onclick="speakText('story')" style="margin-left: 0.5em; font-size: 1.2em;">🔊</button>
+    <button onclick="speakText('story')" style="margin-left: 0.5em;">🔊</button>
     <br><br>
     <button onclick="loadStory()" id="switch-text-button">Changer le texte</button>
   </div>
@@ -119,7 +122,8 @@
       it: { storyButton: "Cambia il testo", louis: "Luigi chiede", answerWas: "✅ La risposta corretta era:" },
       ru: { storyButton: "Сменить текст", louis: "Вопрос", answerWas: "✅ Правильный ответ был:" },
       ja: { storyButton: "テキストを変更", louis: "ルイの質問", answerWas: "✅ 正解は：" },
-      ar: { storyButton: "غيّر النص", louis: "لويس يسأل", answerWas: "✅ الإجابة الصحيحة كانت:" }
+      ar: { storyButton: "غيّر النص", louis: "لويس يسأل", answerWas: "✅ الإجابة الصحيحة كانت:" },
+      es: { storyButton: "Cambiar el texto", louis: "Luis pregunta", answerWas: "✅ La respuesta correcta era:" }
     };
 
     const accents = {
@@ -127,7 +131,8 @@
       it: ['à','è','é','ì','í','î','ò','ó','ù','ú'],
       ru: ['а','б','в','г','д','е','ё','ж','з','и'],
       ja: ['あ','い','う','え','お','か','き','く','け','こ'],
-      ar: ['ا','ب','ت','ث','ج','ح','خ','د','ذ','ر']
+      ar: ['ا','ب','ت','ث','ج','ح','خ','د','ذ','ر'],
+      es: ['á','é','í','ó','ú','ñ','ü']
     };
 
     const storySources = {
@@ -135,7 +140,8 @@
       it: () => stories_it,
       ru: () => stories_ru,
       ja: () => stories_ja,
-      ar: () => stories_ar
+      ar: () => stories_ar,
+      es: () => stories_es
     };
 
     function switchLanguage(lang) {
@@ -199,35 +205,20 @@
     }
 
     function speakText(type) {
-        let text = '';
-        if (type === 'story') {
-          text = document.getElementById('story-text').innerText;
-        } else if (type === 'question') {
-          text = document.getElementById('question').innerText;
-        }
-      
-        const langMap = {
-          fr: 'fr-FR', it: 'it-IT', ru: 'ru-RU', ja: 'ja-JP', ar: 'ar-SA'
-        };
-      
-        const lang = langMap[currentLanguage] || 'en-US';
-        const voices = window.speechSynthesis.getVoices();
-        const voice = voices.find(v => v.lang === lang);
-      
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = lang;
-        if (voice) {
-          utterance.voice = voice;
-        }
-      
-        speechSynthesis.cancel(); // stop any ongoing speech
-        speechSynthesis.speak(utterance);
-}
+      const utterance = new SpeechSynthesisUtterance();
+      let text = type === 'story'
+        ? document.getElementById('story-text').innerText
+        : document.getElementById('question').innerText;
 
-    window.speechSynthesis.onvoiceschanged = () => {
-      console.log("Available voices:", speechSynthesis.getVoices());
-};
+      const langMap = {
+        fr: 'fr-FR', it: 'it-IT', ru: 'ru-RU', ja: 'ja-JP', ar: 'ar-SA', es: 'es-ES'
+      };
 
+      utterance.lang = langMap[currentLanguage] || 'en-US';
+      utterance.text = text;
+      speechSynthesis.cancel();
+      speechSynthesis.speak(utterance);
+    }
 
     window.onload = () => {
       switchLanguage('fr');
