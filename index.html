@@ -299,6 +299,13 @@
     window.onload = () => {
       switchLanguage('fr');  // default language
     };
+    document.getElementById("user-answer").addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault(); // prevent new line
+        submitAnswer();
+  }
+});
+
   </script>
 </body>
 </html>
