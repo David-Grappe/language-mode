@@ -199,20 +199,35 @@
     }
 
     function speakText(type) {
-      const utterance = new SpeechSynthesisUtterance();
-      let text = type === 'story'
-        ? document.getElementById('story-text').innerText
-        : document.getElementById('question').innerText;
+        let text = '';
+        if (type === 'story') {
+          text = document.getElementById('story-text').innerText;
+        } else if (type === 'question') {
+          text = document.getElementById('question').innerText;
+        }
+      
+        const langMap = {
+          fr: 'fr-FR', it: 'it-IT', ru: 'ru-RU', ja: 'ja-JP', ar: 'ar-SA'
+        };
+      
+        const lang = langMap[currentLanguage] || 'en-US';
+        const voices = window.speechSynthesis.getVoices();
+        const voice = voices.find(v => v.lang === lang);
+      
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang;
+        if (voice) {
+          utterance.voice = voice;
+        }
+      
+        speechSynthesis.cancel(); // stop any ongoing speech
+        speechSynthesis.speak(utterance);
+}
 
-      const langMap = {
-        fr: 'fr-FR', it: 'it-IT', ru: 'ru-RU', ja: 'ja-JP', ar: 'ar-SA'
-      };
+    window.speechSynthesis.onvoiceschanged = () => {
+      console.log("Available voices:", speechSynthesis.getVoices());
+};
 
-      utterance.lang = langMap[currentLanguage] || 'en-US';
-      utterance.text = text;
-      speechSynthesis.cancel();
-      speechSynthesis.speak(utterance);
-    }
 
     window.onload = () => {
       switchLanguage('fr');
