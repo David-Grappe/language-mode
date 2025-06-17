@@ -107,7 +107,6 @@
     <div id="streak">🔥 Streak: 0 days</div>
     <div id="lives">❤️❤️❤️</div>
   
-
     <div id="story">
       <h3>📖 Extrait de roman</h3>
       <p id="story-text">Cliquez ici pour lire un passage.</p>
@@ -120,11 +119,12 @@
     </div>
 
     <div id="question-box">
+      <!-- ✅ Correct answer display here -->
       <p id="correct-answer-display" style="font-weight: bold; color: green;"></p>
+
       <label for="user-answer">Ta réponse : </label><br>
       <textarea id="user-answer" rows="3" cols="40" placeholder="Écris ta réponse ici..."></textarea>
 
-      
       <div class="accent-buttons">
         <button onclick="addAccent('à')">à</button>
         <button onclick="addAccent('â')">â</button>
@@ -183,57 +183,55 @@
       currentAnswer = story.answer.toLowerCase();
       document.getElementById('user-answer').classList.remove('correct', 'incorrect');
       document.getElementById('response-confirmation').innerText = "";
+      document.getElementById('correct-answer-display').innerText = ""; // Clear old correct answer
       wrongAttempts = 0;
     }
 
     function submitAnswer() {
-  const textarea = document.getElementById('user-answer');
-  const userResponse = textarea.value.trim().toLowerCase();
-  textarea.classList.remove('correct', 'incorrect');
-  if (!userResponse) return;
+      const textarea = document.getElementById('user-answer');
+      const userResponse = textarea.value.trim().toLowerCase();
+      textarea.classList.remove('correct', 'incorrect');
+      if (!userResponse) return;
 
-  if (userResponse === currentAnswer) {
-    textarea.classList.add('correct');
-    document.getElementById('response-confirmation').innerText = "Bonne réponse ! 😊";
-    document.getElementById('sound-correct').play();
-    questionCount++;
-    setTimeout(() => {
-      textarea.value = '';
-      textarea.classList.remove('correct');
-      loadStory();
-    }, 1000);
-  } else {
-    textarea.classList.add('incorrect');
-    document.getElementById('sound-wrong').play();
-    wrongAttempts++;
-    lives--;
-    updateLives();
-    
-    textarea.value = ''; // ✅ Clear textbox on every wrong attempt
+      if (userResponse === currentAnswer) {
+        textarea.classList.add('correct');
+        document.getElementById('response-confirmation').innerText = "Bonne réponse ! 😊";
+        document.getElementById('sound-correct').play();
+        questionCount++;
+        setTimeout(() => {
+          textarea.value = '';
+          textarea.classList.remove('correct');
+          loadStory();
+        }, 1000);
+      } else {
+        textarea.classList.add('incorrect');
+        document.getElementById('sound-wrong').play();
+        wrongAttempts++;
+        lives--;
+        updateLives();
+        textarea.value = '';
 
-    if (wrongAttempts >= 3) {
-      document.getElementById('correct-answer-display').innerText =
-        `✅ La bonne réponse était : "${currentAnswer}"`;
-      document.getElementById('response-confirmation').innerText = "";
-      document.getElementById('correct-answer-display').innerText = "";
+        if (wrongAttempts >= 3) {
+          const answerDisplay = document.getElementById('correct-answer-display');
+          answerDisplay.innerText = `✅ La bonne réponse était : "${currentAnswer}"`;
+          document.getElementById('response-confirmation').innerText = "";
 
+          setTimeout(() => {
+            answerDisplay.innerText = '';
+            loadStory();
+          }, 3000); // Show answer for 3 seconds
+        } else {
+          document.getElementById('response-confirmation').innerText = "Pas tout à fait. Essaie encore !";
+        }
 
-      setTimeout(() => {
-        loadStory();
-      }, 2500); // wait so user sees the correct answer
-    } else {
-      document.getElementById('response-confirmation').innerText = "Pas tout à fait. Essaie encore !";
+        if (lives <= 0) {
+          alert("Tu as perdu toutes tes vies. Redémarre la leçon.");
+          questionCount = 0;
+          lives = 3;
+          updateLives();
+        }
+      }
     }
-
-    if (lives <= 0) {
-      alert("Tu as perdu toutes tes vies. Redémarre la leçon.");
-      questionCount = 0;
-      lives = 3;
-      updateLives();
-    }
-  }
-}
-
 
     function addAccent(letter) {
       const textarea = document.getElementById('user-answer');
@@ -243,9 +241,10 @@
       textarea.focus();
       textarea.selectionStart = textarea.selectionEnd = start + 1;
     }
+
     window.onload = () => {
-  loadStory();
-};
+      loadStory();
+    };
   </script>
 </body>
 </html>
