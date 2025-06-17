@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Language Mode</title>
 
-  <!-- Load stories for each language -->
   <script src="stories.js"></script>
   <script src="stories_it.js"></script>
   <script src="stories_ru.js"></script>
@@ -92,12 +91,10 @@
     <button onclick="loadStory()" id="switch-text-button">Changer le texte</button>
   </div>
 
-
   <div id="dialogue">
     <h3>🗣️ Question</h3>
     <p id="question" style="display: inline;">Click a story to get a question.</p>
     <button onclick="speakText('question')" style="margin-left: 0.5em;">🔊</button>
-
   </div>
 
   <div id="question-box">
@@ -118,61 +115,11 @@
     let wrongAttempts = 0;
 
     const translations = {
-      fr: {
-        title: "Mode Langue", streak: "🔥 Streak: 0 jours",
-        storyTitle: "📖 Extrait de roman", storyPlaceholder: "Cliquez ici pour lire un passage.",
-        storyButton: "Lire un texte", louis: "Louis demande",
-        louisPlaceholder: "Clique sur un extrait pour recevoir une question.",
-        yourAnswer: "Ta réponse :", submit: "Soumettre",
-        tryAgain: "Pas tout à fait. Essaie encore !", correctResponse: "Bonne réponse ! 😊",
-        finalMessage: "Félicitations ! Vous avez terminé la leçon.",
-        lostMessage: "Tu as perdu toutes tes vies. Redémarre la leçon.",
-        answerWas: "✅ La bonne réponse était :"
-      },
-      it: {
-        title: "Modalità Lingua", streak: "🔥 Serie: 0 giorni",
-        storyTitle: "📖 Estratto di romanzo", storyPlaceholder: "Clicca qui per leggere un brano.",
-        storyButton: "Leggi un testo", louis: "Luigi chiede",
-        louisPlaceholder: "Clicca su un brano per ricevere una domanda.",
-        yourAnswer: "La tua risposta:", submit: "Invia",
-        tryAgain: "Non proprio. Riprova!", correctResponse: "Risposta corretta! 😊",
-        finalMessage: "Complimenti! Hai completato la lezione.",
-        lostMessage: "Hai perso tutte le vite. Riavvia la lezione.",
-        answerWas: "✅ La risposta corretta era:"
-      },
-      ru: {
-        title: "Режим языка", streak: "🔥 Серия: 0 дней",
-        storyTitle: "📖 Отрывок из романа", storyPlaceholder: "Нажмите здесь, чтобы прочитать отрывок.",
-        storyButton: "Читать текст", louis: "Вопрос",
-        louisPlaceholder: "Нажмите на отрывок, чтобы получить вопрос.",
-        yourAnswer: "Твой ответ:", submit: "Отправить",
-        tryAgain: "Неправильно. Попробуй еще!", correctResponse: "Правильный ответ! 😊",
-        finalMessage: "Поздравляем! Вы завершили урок.",
-        lostMessage: "Вы потеряли все жизни. Начните заново.",
-        answerWas: "✅ Правильный ответ был:"
-      },
-      ja: {
-        title: "言語モード", streak: "🔥 連続: 0日",
-        storyTitle: "📖 小説の抜粋", storyPlaceholder: "クリックして文章を読む",
-        storyButton: "テキストを読む", louis: "ルイの質問",
-        louisPlaceholder: "抜粋をクリックして質問を受け取る",
-        yourAnswer: "あなたの答え：", submit: "送信",
-        tryAgain: "違います。もう一度！", correctResponse: "正解です！ 😊",
-        finalMessage: "おめでとうございます！ レッスンが終了しました。",
-        lostMessage: "全てのライフを失いました。やり直してください。",
-        answerWas: "✅ 正解は："
-      },
-      ar: {
-        title: "وضع اللغة", streak: "🔥 السلسلة: 0 أيام",
-        storyTitle: "📖 مقتطف من رواية", storyPlaceholder: "اضغط هنا لقراءة المقطع.",
-        storyButton: "اقرأ النص", louis: "لويس يسأل",
-        louisPlaceholder: "اضغط على المقطع للحصول على سؤال.",
-        yourAnswer: "إجابتك:", submit: "إرسال",
-        tryAgain: "ليست صحيحة، حاول مرة أخرى!", correctResponse: "إجابة صحيحة! 😊",
-        finalMessage: "مبروك! لقد أنهيت الدرس.",
-        lostMessage: "لقد فقدت كل حياتك. أعد بدء الدرس.",
-        answerWas: "✅ الإجابة الصحيحة كانت:"
-      }
+      fr: { storyButton: "Changer le texte", louis: "Louis demande", answerWas: "✅ La bonne réponse était :" },
+      it: { storyButton: "Cambia il testo", louis: "Luigi chiede", answerWas: "✅ La risposta corretta era:" },
+      ru: { storyButton: "Сменить текст", louis: "Вопрос", answerWas: "✅ Правильный ответ был:" },
+      ja: { storyButton: "テキストを変更", louis: "ルイの質問", answerWas: "✅ 正解は：" },
+      ar: { storyButton: "غيّر النص", louis: "لويس يسأل", answerWas: "✅ الإجابة الصحيحة كانت:" }
     };
 
     const accents = {
@@ -194,34 +141,9 @@
     function switchLanguage(lang) {
       currentLanguage = lang;
       const t = translations[lang];
-
-      document.title = t.title;
-      document.querySelector("h1").innerText = t.title;
-      document.getElementById("streak").innerText = t.streak;
-      document.querySelector("#story h3").innerText = t.storyTitle;
-      document.getElementById("story-text").innerText = t.storyPlaceholder;
       document.querySelector("#switch-text-button").innerText = t.storyButton;
       document.querySelector("#dialogue h3").innerText = t.louis;
-      document.getElementById("question").innerText = t.louisPlaceholder;
-      document.querySelector("label[for='user-answer']").innerText = t.yourAnswer;
-      document.querySelector("#question-box button").innerText = t.submit;
-
-      questionCount = 0;
-      lives = 3;
-      updateLives();
-      updateAccentButtons();
-      loadStory();  // ✅ Load story immediately
-    }
-
-    function updateAccentButtons() {
-      const container = document.querySelector(".accent-buttons");
-      container.innerHTML = "";
-      accents[currentLanguage].forEach(letter => {
-        const btn = document.createElement("button");
-        btn.innerText = letter;
-        btn.onclick = () => addAccent(letter);
-        container.appendChild(btn);
-      });
+      loadStory();
     }
 
     function updateLives() {
@@ -230,42 +152,28 @@
 
     function loadStory() {
       const data = storySources[currentLanguage]();
-      if (!data || data.length === 0) {
-        console.warn("No stories available for language:", currentLanguage);
-        document.getElementById('story-text').innerText = "No stories available.";
-        document.getElementById('question').innerText = "";
-        return;
-      }
-
+      if (!data || data.length === 0) return;
       const story = data[Math.floor(Math.random() * data.length)];
       document.getElementById('story-text').innerText = story.text;
       document.getElementById('question').innerText = translations[currentLanguage].louis + " : " + story.question;
       currentAnswer = story.answer.toLowerCase();
-
-      document.getElementById('user-answer').classList.remove('correct', 'incorrect');
-      document.getElementById('response-confirmation').innerText = "";
-      document.getElementById('correct-answer-display').innerText = "";
+      document.getElementById('user-answer').value = '';
+      document.getElementById('correct-answer-display').innerText = '';
+      document.getElementById('response-confirmation').innerText = '';
       wrongAttempts = 0;
     }
 
     function submitAnswer() {
       const textarea = document.getElementById('user-answer');
       const userResponse = textarea.value.trim().toLowerCase();
-      textarea.classList.remove('correct', 'incorrect');
       if (!userResponse) return;
 
       if (userResponse === currentAnswer) {
-        textarea.classList.add('correct');
-        document.getElementById('response-confirmation').innerText = translations[currentLanguage].correctResponse;
+        document.getElementById('response-confirmation').innerText = "✅";
         document.getElementById('sound-correct').play();
         questionCount++;
-        setTimeout(() => {
-          textarea.value = '';
-          textarea.classList.remove('correct');
-          loadStory();
-        }, 1000);
+        setTimeout(loadStory, 1000);
       } else {
-        textarea.classList.add('incorrect');
         document.getElementById('sound-wrong').play();
         wrongAttempts++;
         lives--;
@@ -273,69 +181,49 @@
         textarea.value = '';
 
         if (wrongAttempts >= 3) {
-          document.getElementById('correct-answer-display').innerText = `${translations[currentLanguage].answerWas} "${currentAnswer}"`;
-          document.getElementById('response-confirmation').innerText = "";
-          setTimeout(() => {
-            document.getElementById('correct-answer-display').innerText = '';
-            loadStory();
-          }, 5000);
+          document.getElementById('correct-answer-display').innerText =
+            translations[currentLanguage].answerWas + ` "${currentAnswer}"`;
+          setTimeout(loadStory, 5000);
         } else {
-          document.getElementById('response-confirmation').innerText = translations[currentLanguage].tryAgain;
+          document.getElementById('response-confirmation').innerText = "❌";
         }
 
         if (lives <= 0) {
-          alert(translations[currentLanguage].lostMessage);
-          questionCount = 0;
+          alert("Game over. Restarting...");
           lives = 3;
+          questionCount = 0;
           updateLives();
+          loadStory();
         }
       }
     }
 
-    function addAccent(letter) {
-      const textarea = document.getElementById('user-answer');
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      textarea.value = textarea.value.slice(0, start) + letter + textarea.value.slice(end);
-      textarea.focus();
-      textarea.selectionStart = textarea.selectionEnd = start + 1;
+    function speakText(type) {
+      const utterance = new SpeechSynthesisUtterance();
+      let text = type === 'story'
+        ? document.getElementById('story-text').innerText
+        : document.getElementById('question').innerText;
+
+      const langMap = {
+        fr: 'fr-FR', it: 'it-IT', ru: 'ru-RU', ja: 'ja-JP', ar: 'ar-SA'
+      };
+
+      utterance.lang = langMap[currentLanguage] || 'en-US';
+      utterance.text = text;
+      speechSynthesis.cancel();
+      speechSynthesis.speak(utterance);
     }
 
     window.onload = () => {
-      switchLanguage('fr');  // default language
+      switchLanguage('fr');
     };
+
     document.getElementById("user-answer").addEventListener("keydown", function (e) {
       if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault(); // prevent new line
+        e.preventDefault();
         submitAnswer();
-  }
-});
-
-    function speakText(type) {
-      const utterance = new SpeechSynthesisUtterance();
-      let text = '';
-    
-      if (type === 'story') {
-        text = document.getElementById('story-text').innerText;
-      } else if (type === 'question') {
-        text = document.getElementById('question').innerText;
       }
-    
-      // Language mapping (ISO codes)
-      const langMap = {
-        fr: 'fr-FR',
-        it: 'it-IT',
-        ru: 'ru-RU',
-        ja: 'ja-JP',
-        ar: 'ar-SA'
-      };
-
-  utterance.lang = langMap[currentLanguage] || 'en-US';
-  utterance.text = text;
-  speechSynthesis.speak(utterance);
-}
-
-
+    });
   </script>
 </body>
 </html>
