@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Language Mode</title>
 
-  <!-- Default to French stories -->
-  <script src="stories.js"></script>
-  <script src="stories_it.js"></script>
+  <!-- Load story sources -->
+  <script src="stories.js"></script>     <!-- French stories -->
+  <script src="stories_it.js"></script> <!-- Italian stories -->
 
   <style>
     body {
@@ -67,17 +67,15 @@
   </style>
 </head>
 <body>
-  <!-- Audio feedback -->
   <audio id="sound-correct" src="correct.mp3" preload="auto"></audio>
   <audio id="sound-wrong" src="wrong.mp3" preload="auto"></audio>
 
-  <!-- Language buttons -->
+  <!-- Language switch buttons -->
   <div style="margin-bottom: 1rem;">
     <button onclick="switchLanguage('fr')">Français</button>
     <button onclick="switchLanguage('it')">Italiano</button>
   </div>
 
-  <!-- Main content -->
   <h1>Language Mode</h1>
   <div id="streak">🔥 Streak: 0 jours</div>
   <div id="lives">❤️❤️❤️</div>
@@ -152,13 +150,6 @@
       it: ['à','è','é','ì','í','î','ò','ó','ù','ú']
     };
 
-    document.getElementById("user-answer").addEventListener("keydown", function (e) {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        submitAnswer();
-      }
-    });
-
     function switchLanguage(lang) {
       currentLanguage = lang;
       const t = translations[lang];
@@ -174,8 +165,11 @@
       document.querySelector("label[for='user-answer']").innerText = t.yourAnswer;
       document.querySelector("#question-box button").innerText = t.submit;
 
+      questionCount = 0;
+      lives = 3;
+      updateLives();
       updateAccentButtons();
-      loadStory();
+      loadStory(); // 👈 Load correct story immediately
     }
 
     function updateAccentButtons() {
@@ -194,13 +188,14 @@
     }
 
     function loadStory() {
-      const data = currentLanguage === 'fr' ? stories : stories_it;
+      const storyData = currentLanguage === 'fr' ? stories : stories_it;
+
       if (questionCount >= 10) {
         alert(translations[currentLanguage].finalMessage);
         return;
       }
 
-      const story = data[Math.floor(Math.random() * data.length)];
+      const story = storyData[Math.floor(Math.random() * storyData.length)];
       document.getElementById('story-text').innerText = story.text;
       document.getElementById('question').innerText = translations[currentLanguage].louis + " : " + story.question;
       currentAnswer = story.answer.toLowerCase();
